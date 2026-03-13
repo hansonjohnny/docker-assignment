@@ -176,7 +176,7 @@ Thumbs.db
 - Trigger: On **push to main**
 - Actions:
   1. Checkout repository
-  2. Log in to GHCR using `GHCR_PAT`
+  2. Log in to GHCR using `CR_PAT`
   3. Build Docker image
   4. Push image to GHCR
 
@@ -241,9 +241,6 @@ docker compose up --build -d
 4. **Issue: Git push failing with “Repository not found”**
    - **Cause:** Remote repository didn’t exist on GitHub.
    - **Resolution:** Created the repo via **GitHub CLI** and updated the remote URL to HTTPS.
-
-5. **General multi-platform line ending warnings (LF → CRLF)**
-   - **Resolution:** Configured Git `core.autocrlf` to `input` for consistent LF endings in the repository.
 
 ---
 
