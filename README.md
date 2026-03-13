@@ -24,6 +24,9 @@ This project is a **containerized Flask application** using **Docker**, **Redis*
 - [.dockerignore](#dockerignore)
 - [CI/CD Workflow](#cicd-workflow)
 - [Image Size Comparison](#image-size-comparison)
+- [Images & Registry URLs](#images--registry-urls)
+- [Run the Full Stack Locally](#run-the-full-stack-locally)
+- [Challenges Encountered & Resolutions](#challenges-encountered--resolutions)
 - [Notes](#notes)
 
 ---
@@ -195,6 +198,58 @@ docker push ghcr.io/${{ github.repository_owner }}/flask-app:latest
 
 ---
 
+## Images & Registry URLs
+
+- **DockerHub Image URL:**  
+  `docker.io/<your-dockerhub-username>/flask-app:latest`
+
+- **GitHub Container Registry (GHCR) URL:**  
+  `ghcr.io/<your-github-username>/flask-app:latest`
+
+- **AWS ECR Repository URI:**  
+  `<aws_account_id>.dkr.ecr.<region>.amazonaws.com/flask-app:latest`
+
+- **Azure Container Registry (ACR) URI:** *(if applicable)*  
+  `<your-acr-name>.azurecr.io/flask-app:latest`
+
+---
+
+## Run the Full Stack Locally
+
+To start the full stack (Flask + Redis + Postgres) locally:
+
+```bash
+docker compose up --build -d
+```
+
+- `--build` ensures any changes in the Dockerfile are applied
+- `-d` runs containers in detached mode
+
+---
+
+## Challenges Encountered & Resolutions
+
+1. **Issue: /root/.local not found during build**
+   - **Cause:** Installing Python dependencies for the wrong user path in a multi-stage build.
+   - **Resolution:** Switched to a **multi-stage Dockerfile** with system-wide installation in `/usr/local` and copying dependencies to runtime stage.
+
+2. **Issue: DockerHub / GHCR push failing**
+   - **Cause:** Incorrect authentication or repository not created yet.
+   - **Resolution:** Created repositories on DockerHub and GitHub, used **Personal Access Token (PAT)** for GHCR login, and updated `docker login` credentials.
+
+3. **Issue: DNS / network errors pulling base images**
+   - **Cause:** Docker Desktop network or proxy issues.
+   - **Resolution:** Set a stable DNS (`8.8.8.8`) in Docker settings, ensured internet connectivity, and manually pulled base images when needed.
+
+4. **Issue: Git push failing with “Repository not found”**
+   - **Cause:** Remote repository didn’t exist on GitHub.
+   - **Resolution:** Created the repo via **GitHub CLI** and updated the remote URL to HTTPS.
+
+5. **General multi-platform line ending warnings (LF → CRLF)**
+   - **Resolution:** Configured Git `core.autocrlf` to `input` for consistent LF endings in the repository.
+
+---
+
 ## Notes
 
 - Health check endpoint in `app.py`:
@@ -212,5 +267,5 @@ def health():
 
 ---
 
-
+**Project is now ready for deployment** to Docker Swarm, Kubernetes, or cloud services like AWS ECS or Azure Container Instances.
 
