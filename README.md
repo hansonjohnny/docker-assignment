@@ -212,5 +212,5 @@ def health():
 
 ---
 
-**Project is now ready for deployment** to Docker Swarm, Kubernetes, or cloud services like AWS ECS or Azure Container Instances.
+
 
