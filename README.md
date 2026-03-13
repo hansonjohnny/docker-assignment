@@ -201,16 +201,13 @@ docker push ghcr.io/${{ github.repository_owner }}/flask-app:latest
 ## Images & Registry URLs
 
 - **DockerHub Image URL:**  
-  `docker.io/<your-dockerhub-username>/flask-app:latest`
+  `docker.io/hansonjohnny/flask-app:latest`
 
 - **GitHub Container Registry (GHCR) URL:**  
-  `ghcr.io/<your-github-username>/flask-app:latest`
+  `ghcr.io/hansonjohnny/flask-app:latest`
 
 - **AWS ECR Repository URI:**  
-  `<aws_account_id>.dkr.ecr.<region>.amazonaws.com/flask-app:latest`
-
-- **Azure Container Registry (ACR) URI:** *(if applicable)*  
-  `<your-acr-name>.azurecr.io/flask-app:latest`
+  `669836379908.dkr.ecr.us-east-1.amazonaws.com/flask-app`
 
 ---
 
@@ -267,5 +264,5 @@ def health():
 
 ---
 
-**Project is now ready for deployment** to Docker Swarm, Kubernetes, or cloud services like AWS ECS or Azure Container Instances.
+**Project is now ready for deployment** to Kubernetes, or cloud services like AWS ECS.
 
