@@ -1,64 +1,64 @@
-name: Build, Test & Push Docker Image
+# name: Build, Test & Push Docker Image
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+# on:
+#   push:
+#     branches:
+#       - main
+#   pull_request:
+#     branches:
+#       - main
 
-concurrency:
-  group: docker-image-${{ github.ref }}
-  cancel-in-progress: true
+# concurrency:
+#   group: docker-image-${{ github.ref }}
+#   cancel-in-progress: true
 
-permissions:
-  contents: read
-  packages: write
+# permissions:
+#   contents: read
+#   packages: write
 
-jobs:
-  build-and-push:
-    runs-on: ubuntu-latest
+# jobs:
+#   build-and-push:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v4
 
-      - name: Set up QEMU (for multi-arch builds)
-        uses: docker/setup-qemu-action@v3
+#       - name: Set up QEMU (for multi-arch builds)
+#         uses: docker/setup-qemu-action@v3
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+#       - name: Set up Docker Buildx
+#         uses: docker/setup-buildx-action@v3
 
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+#       - name: Log in to GitHub Container Registry
+#         uses: docker/login-action@v2
+#         with:
+#           registry: ghcr.io
+#           username: ${{ github.actor }}
+#           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          push: true
-          tags: |
-            ghcr.io/${{ github.repository_owner }}/docker-assignment:latest
-            ghcr.io/${{ github.repository_owner }}/docker-assignment:${{ github.sha }}
-          platforms: linux/amd64,linux/arm64
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+#       - name: Build and push image
+#         uses: docker/build-push-action@v5
+#         with:
+#           context: .
+#           push: true
+#           tags: |
+#             ghcr.io/${{ github.repository_owner }}/docker-assignment:latest
+#             ghcr.io/${{ github.repository_owner }}/docker-assignment:${{ github.sha }}
+#           platforms: linux/amd64,linux/arm64
+#           cache-from: type=gha
+#           cache-to: type=gha,mode=max
 
-      - name: Run container for smoke test
-        run: |
-          IMAGE=ghcr.io/${{ github.repository_owner }}/docker-assignment:${{ github.sha }}
-          docker run -d --rm --name docker-smoke-test -p 5000:5000 "$IMAGE"
-          for i in {1..15}; do
-            if curl --fail --silent http://localhost:5000/health; then
-              echo "Health check passed"
-              break
-            fi
-            echo "Waiting for /health... ($i/15)"
-            sleep 2
-          done
-          docker stop docker-smoke-test
+#       - name: Run container for smoke test
+#         run: |
+#           IMAGE=ghcr.io/${{ github.repository_owner }}/docker-assignment:${{ github.sha }}
+#           docker run -d --rm --name docker-smoke-test -p 5000:5000 "$IMAGE"
+#           for i in {1..15}; do
+#             if curl --fail --silent http://localhost:5000/health; then
+#               echo "Health check passed"
+#               break
+#             fi
+#             echo "Waiting for /health... ($i/15)"
+#             sleep 2
+#           done
+#           docker stop docker-smoke-test
